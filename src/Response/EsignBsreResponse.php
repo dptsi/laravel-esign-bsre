@@ -1,7 +1,7 @@
 <?php
-namespace Dptsi\ESignBSrE\Response;
+namespace Dptsi\EsignBsre\Response;
 
-class ESignBsreResponse
+class EsignBsreResponse
 {
     private $status;
     private $errors;

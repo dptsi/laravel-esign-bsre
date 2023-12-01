@@ -1,8 +1,8 @@
 <?php
-namespace Dptsi\ESignBSrE\Core;
+namespace Dptsi\EsignBsre\Core;
 
-use Dptsi\ESignBSrE\Response\ESignBsreResponse;
-use Dptsi\ESignBSrE\Exception\InvalidArgument;
+use Dptsi\EsignBsre\Response\ESignBsreResponse;
+use Dptsi\EsignBsre\Exception\InvalidArgument;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use DateTime;
@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 
-class ESignBsReManager 
+class EsignBsreManager 
 {
     private $http;
     private $timeout;

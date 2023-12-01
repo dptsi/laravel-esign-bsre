@@ -1,5 +1,5 @@
 <?php
-namespace Dptsi\ESignBSrE\Exception;
+namespace Dptsi\EsignBsre\Exception;
 
 
 use RuntimeException;

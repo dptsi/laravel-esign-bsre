@@ -17,13 +17,13 @@
     },
     "autoload": {
       "psr-4": {
-        "Dptsi\\ESignBSrE\\": "src/"
+        "Dptsi\\EsignBsre\\": "src/"
       }
     },
     "extra": {
       "laravel": {
         "providers": [
-          "Dptsi\\ESignBSrE\\Providers\\BsreServiceProvider"
+          "Dptsi\\EsignBsre\\Providers\\BsreServiceProvider"
         ]
       }
     }
