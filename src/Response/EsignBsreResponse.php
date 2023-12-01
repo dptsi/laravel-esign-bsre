@@ -1,5 +1,4 @@
 <?php
-
 namespace Dptsi\ESignBSrE\Response;
 
 class ESignBsreResponse

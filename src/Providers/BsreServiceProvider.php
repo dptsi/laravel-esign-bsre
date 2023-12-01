@@ -1,5 +1,4 @@
 <?php
-
 namespace Dptsi\ESignBSrE\Providers;
 
 use Dptsi\ESignBSrE\Core\ESignBsReManager;

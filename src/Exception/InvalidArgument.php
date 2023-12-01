@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Dptsi\ESignBSrE\Exception;
 
 
