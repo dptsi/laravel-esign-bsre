@@ -17,13 +17,13 @@
     },
     "autoload": {
       "psr-4": {
-        "Dptsi\\FileStorage\\": "src/"
+        "Dptsi\\ESignBSrE\\": "src/"
       }
     },
     "extra": {
       "laravel": {
         "providers": [
-          "Dptsi\\FileStorage\\Providers\\BsreServiceProvider"
+          "Dptsi\\ESignBSrE\\Providers\\BsreServiceProvider"
         ]
       }
     }
