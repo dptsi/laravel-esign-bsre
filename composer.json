@@ -10,11 +10,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-      "php": "^7.4|8.0.*|8.1.*|8.2.*",
-      "laravel/framework": "^8.12",
-      "guzzlehttp/guzzle": "^7.0.1",
-      "ext-json": "*",
-      "aws/aws-sdk-php": "^3.20.0"
+      "php": ">=5.5.9",
+      "laravel/framework": "5.1.*",
+      "guzzlehttp/guzzle": "^6.5",
+      "ext-json": "*"
     },
     "autoload": {
       "psr-4": {
