@@ -2,7 +2,7 @@
 
 namespace Dptsi\ESignBSrE\Providers;
 
-use Dptsi\ESignBSrE\Facade\ESignBSrE;
+use Dptsi\ESignBSrE\Core\ESignBsReManager;
 use Illuminate\Support\ServiceProvider;
 
 class BsreServiceProvider extends ServiceProvider
@@ -17,7 +17,7 @@ class BsreServiceProvider extends ServiceProvider
         $this->app->singleton(
             'esign_bsre',
             function () {
-                $storage = new ESignBSrE();
+                $storage = new ESignBsReManager();
 
                 return $storage;
             }
