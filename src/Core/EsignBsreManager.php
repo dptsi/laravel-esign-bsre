@@ -1,7 +1,7 @@
 <?php
 namespace Dptsi\EsignBsre\Core;
 
-use Dptsi\EsignBsre\Response\ESignBsreResponse;
+use Dptsi\EsignBsre\Response\EsignBsreResponse;
 use Dptsi\EsignBsre\Exception\InvalidArgument;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
@@ -15,7 +15,7 @@ class EsignBsreManager
     private $http;
     private $timeout;
 
-    public function __construct($timeout = 30)
+    public function __construct($timeout = 60)
     {
         $this->http = new Client();
         $this->timeout = $timeout; 
@@ -35,28 +35,16 @@ class EsignBsreManager
                 'auth' => $this->getAuth(),
                 'timeout' => $this->timeout,
             ]);
-        } catch(\GuzzleHttp\Exception\ConnectException $e){
-            return (new ESignBsreResponse())->setFromExeption($e, ESignBsreResponse::STATUS_TIMEOUT);
-        } catch (\Exception $e) {
-            return (new ESignBsreResponse())->setFromExeption($e, $e->getCode());
-        }
+            return (new EsignBsreResponse())->setFromResponse($response); 
 
-        return (new ESignBsreResponse())->setFromResponse($response); 
+        } catch(\GuzzleHttp\Exception\ConnectException $e){
+            return (new EsignBsreResponse())->setFromExeption($e, EsignBsreResponse::STATUS_TIMEOUT);
+        } catch (\Exception $e) {
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
+        }
     }
 
-    public function sign($file, string $nik, string $passphrase){
-        if($file instanceof UploadedFile) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } elseif ($file instanceof File) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } else {
-            throw new InvalidArgument('Unsupported argument type.');
-        }
-
+    public function sign(string $file_path, string $nik, string $passphrase){
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -64,8 +52,7 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => $datafile,
-                        'filename' => $filename
+                        'contents' => fopen($file_path, 'r')
                     ],
                     [
                         'name'     => 'nik',
@@ -82,39 +69,15 @@ class EsignBsreManager
                 ]
                 ]);
             
-                return (new ESignBsreResponse())->setFromResponse($response); 
+                return (new EsignBsreResponse())->setFromResponse($response); 
         } catch (ServerException $e){
-            return (new ESignBsreResponse())->setFromExeption($e, $e->getCode());
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
         } catch (\Exception $th) {
-            return (new ESignBsreResponse())->setFromExeption($th, $th->getCode());
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
         }
     }
 
-    public function signVisibleWithSpesimen($file, string $nik, string $passphrase, $image_ttd, int $page, int $x, int $y, int $width, int $height){
-        if($file instanceof UploadedFile) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } elseif ($file instanceof File) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } else {
-            throw new InvalidArgument('Unsupported argument type.');
-        }
-
-        if($image_ttd instanceof UploadedFile) {
-            $ttd_filename = $file->hashName();
-            $ttd_datafile = file_get_contents($image_ttd);
-
-        } elseif ($image_ttd instanceof File) {
-            $ttd_filename = $file->hashName();
-            $ttd_datafile = file_get_contents($image_ttd);
-
-        } else {
-            throw new InvalidArgument('Unsupported argument type.');
-        }
-
+    public function signVisibleWithSpesimen(string $file_path, string $nik, string $passphrase, string $image_ttd_path, int $page, int $x, int $y, int $width, int $height){
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -122,8 +85,7 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => $datafile,
-                        'filename' => $filename
+                        'contents' => fopen($file_path, 'r')
                     ],
                     [
                         'name'     => 'nik',
@@ -143,8 +105,7 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'imageTTD',
-                        'contents' => $ttd_datafile,
-                        'filename' => $ttd_filename
+                        'contents' => $image_ttd_path
                     ],
                     [
                         'name'     => 'page',
@@ -169,27 +130,15 @@ class EsignBsreManager
                 ]
                 ]);
             
-                return (new ESignBsreResponse())->setFromResponse($response); 
+                return (new EsignBsreResponse())->setFromResponse($response); 
         } catch (ServerException $e){
-            return (new ESignBsreResponse())->setFromExeption($e, $e->getCode());
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
         } catch (\Exception $th) {
-            return (new ESignBsreResponse())->setFromExeption($th, $th->getCode());
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
         }
     }
 
-    public function signVisibleWithQrCode($file, string $nik, string $passphrase, string $link_qrcode, int $page, int $x, int $y, int $width, int $height){
-        if($file instanceof UploadedFile) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } elseif ($file instanceof File) {
-            $filename = $file->hashName();
-            $datafile = file_get_contents($file);
-
-        } else {
-            throw new InvalidArgument('Unsupported argument type.');
-        }
-
+    public function signVisibleWithQrCode(string $file_path, string $nik, string $passphrase, string $link_qrcode, int $page, int $x, int $y, int $width, int $height){
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -197,8 +146,7 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => $datafile,
-                        'filename' => $filename
+                        'contents' => fopen($file_path, 'r')
                     ],
                     [
                         'name'     => 'nik',
@@ -243,11 +191,11 @@ class EsignBsreManager
                 ]
                 ]);
             
-                return (new ESignBsreResponse())->setFromResponse($response); 
+                return (new EsignBsreResponse())->setFromResponse($response); 
         } catch (ServerException $e){
-            return (new ESignBsreResponse())->setFromExeption($e, $e->getCode());
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
         } catch (\Exception $th) {
-            return (new ESignBsreResponse())->setFromExeption($th, $th->getCode());
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
         }
     }
 }

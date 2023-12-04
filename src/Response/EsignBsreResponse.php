@@ -7,8 +7,8 @@ class EsignBsreResponse
     private $errors;
     private $data;
     private $response;
-    public const STATUS_OK = 200;
-    public const STATUS_TIMEOUT = 408;
+    const STATUS_OK = 200;
+    const STATUS_TIMEOUT = 408;
 
     public function setFromExeption($error, $status){
         $this->status = $status;
@@ -26,7 +26,7 @@ class EsignBsreResponse
         return $this;
     }
 
-    private function setStatusFromResponse(): void
+    private function setStatusFromResponse()
     {
         $this->status = $this->response->getStatusCode();
     }
@@ -42,7 +42,7 @@ class EsignBsreResponse
     /**
      * @param mixed $errors
      */
-    public function setErrorsFromResponse(): void
+    public function setErrorsFromResponse()
     {
         if ($this->isFailed()){
             $responseBody = json_decode($this->response->getBody()->getContents());
@@ -62,7 +62,7 @@ class EsignBsreResponse
     /**
      * @param mixed $data
      */
-    public function setDataFromResponse(): void
+    public function setDataFromResponse()
     {
         if ($this->isSuccess()){
             if (strpos(strtolower(implode(" ", $this->response->getHeader('Content-Type'))), strtolower('application/json')) !== false)
