@@ -80,11 +80,11 @@ class EsignBsreResponse
         return $this->data;
     }
 
-    private function isSuccess(){
+    public function isSuccess(){
         return $this->status == self::STATUS_OK;
     }
 
-    private function isFailed(){
+    public function isFailed(){
         return $this->status != self::STATUS_OK;
     }
 }
