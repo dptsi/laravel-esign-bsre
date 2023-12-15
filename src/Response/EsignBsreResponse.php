@@ -9,10 +9,17 @@ class EsignBsreResponse
     private $response;
     const STATUS_OK = 200;
     const STATUS_TIMEOUT = 408;
+    const WRONG_PASSPHRASE = 2031;
 
     public function setFromExeption($error, $status){
         $this->status = $status;
         $this->errors = $error->getMessage();
+        $this->response = $error->getResponse();
+        if (strpos(strtolower(implode(" ", $error->getResponse()->getHeader('Content-Type'))), strtolower('application/json')) !== false){
+            $this->data = json_decode($error->getResponse()->getBody()->getContents());
+        }else{
+            $this->data = $this->response->getBody()->getContents();
+        }
 
         return $this;
     }
@@ -86,5 +93,13 @@ class EsignBsreResponse
 
     public function isFailed(){
         return $this->status != self::STATUS_OK;
+    }
+
+    public function isWrongPassphrase(){
+        if(!empty($this->data)){
+            return $this->data->status_code == self::WRONG_PASSPHRASE;
+        }else{
+            return false;
+        }
     }
 }
