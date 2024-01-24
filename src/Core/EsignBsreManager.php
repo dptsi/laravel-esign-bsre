@@ -44,7 +44,13 @@ class EsignBsreManager
         }
     }
 
-    public function sign(string $file_path, string $nik, string $passphrase){
+    public function sign($file, string $nik, string $passphrase){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -52,7 +58,8 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => fopen($file_path, 'r')
+                        'contents' => $datafile,
+                        'filename' => $filename
                     ],
                     [
                         'name'     => 'nik',
@@ -77,7 +84,21 @@ class EsignBsreManager
         }
     }
 
-    public function signVisibleWithSpesimen(string $file_path, string $nik, string $passphrase, string $image_ttd_path, int $page, int $x, int $y, int $width, int $height){
+    public function signVisibleWithSpesimen($file, string $nik, string $passphrase, $image_ttd, int $page, int $x, int $y, int $width, int $height){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
+        if($image_ttd instanceof UploadedFile || $image_ttd instanceof File) {
+            $ttd_filename = $file->hashName();
+            $ttd_datafile = file_get_contents($image_ttd);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -85,7 +106,8 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => fopen($file_path, 'r')
+                        'contents' => $datafile,
+                        'filename' => $filename
                     ],
                     [
                         'name'     => 'nik',
@@ -105,7 +127,8 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'imageTTD',
-                        'contents' => $image_ttd_path
+                        'contents' => $ttd_datafile,
+                        'filename' => $ttd_filename
                     ],
                     [
                         'name'     => 'page',
@@ -138,7 +161,14 @@ class EsignBsreManager
         }
     }
 
-    public function signVisibleWithQrCode(string $file_path, string $nik, string $passphrase, string $link_qrcode, int $page, int $x, int $y, int $width, int $height){
+    public function signVisibleWithQrCode($file, string $nik, string $passphrase, string $link_qrcode, int $page, int $x, int $y, int $width, int $height){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
         try {
             $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
                 'auth' => $this->getAuth(),
@@ -146,7 +176,8 @@ class EsignBsreManager
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => fopen($file_path, 'r')
+                        'contents' => $datafile,
+                        'filename' => $filename
                     ],
                     [
                         'name'     => 'nik',
