@@ -93,7 +93,7 @@ class EsignBsreManager
         }
 
         if($image_ttd instanceof UploadedFile || $image_ttd instanceof File) {
-            $ttd_filename = $file->hashName();
+            $ttd_filename = $image_ttd->hashName();
             $ttd_datafile = file_get_contents($image_ttd);
         } else {
             throw new InvalidArgument('Unsupported argument type.');
