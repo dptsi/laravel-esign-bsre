@@ -229,4 +229,163 @@ class EsignBsreManager
             return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
         }
     }
+
+    public function signVisibleWithSpesimenWithTagKoordinate($file, string $nik, string $passphrase, $image_ttd, string $tag_koordinate, int $width, int $height){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
+        if($image_ttd instanceof UploadedFile || $image_ttd instanceof File) {
+            $ttd_filename = $image_ttd->hashName();
+            $ttd_datafile = file_get_contents($image_ttd);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
+        try {
+            $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
+                'auth' => $this->getAuth(),
+                'timeout' => $this->timeout,
+                'multipart' => [
+                    [
+                        'name'     => 'file',
+                        'contents' => $datafile,
+                        'filename' => $filename
+                    ],
+                    [
+                        'name'     => 'nik',
+                        'contents' => $nik
+                    ],
+                    [
+                        'name'     => 'passphrase',
+                        'contents' => $passphrase
+                    ],
+                    [
+                        'name'     => 'tampilan',
+                        'contents' => 'visible'
+                    ],
+                    [
+                        'name'     => 'image',
+                        'contents' => true
+                    ],
+                    [
+                        'name'     => 'imageTTD',
+                        'contents' => $ttd_datafile,
+                        'filename' => $ttd_filename
+                    ],
+                    [
+                        'name'     => 'tag_koordinat',
+                        'contents' => $tag_koordinate
+                    ],
+                    [
+                        'name'     => 'width',
+                        'contents' => $width
+                    ],
+                    [
+                        'name'     => 'height',
+                        'contents' => $height
+                    ],
+                ]
+                ]);
+            
+                return (new EsignBsreResponse())->setFromResponse($response); 
+        } catch (ServerException $e){
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
+        } catch (\Exception $th) {
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
+        }
+    }
+
+    public function signVisibleWithQrCodeWithTagKoordinate($file, string $nik, string $passphrase, string $link_qrcode, string $tag_koordinate, int $width, int $height){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
+        try {
+            $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/pdf", [
+                'auth' => $this->getAuth(),
+                'timeout' => $this->timeout,
+                'multipart' => [
+                    [
+                        'name'     => 'file',
+                        'contents' => $datafile,
+                        'filename' => $filename
+                    ],
+                    [
+                        'name'     => 'nik',
+                        'contents' => $nik
+                    ],
+                    [
+                        'name'     => 'passphrase',
+                        'contents' => $passphrase
+                    ],
+                    [
+                        'name'     => 'tampilan',
+                        'contents' => 'visible'
+                    ],
+                    [
+                        'name'     => 'image',
+                        'contents' => false
+                    ],
+                    [
+                        'name'     => 'linkQR',
+                        'contents' => $link_qrcode
+                    ],
+                    [
+                        'name'     => 'tag_koordinat',
+                        'contents' => $tag_koordinate
+                    ],
+                    [
+                        'name'     => 'width',
+                        'contents' => $width
+                    ],
+                    [
+                        'name'     => 'height',
+                        'contents' => $height
+                    ],
+                ]
+                ]);
+            
+                return (new EsignBsreResponse())->setFromResponse($response); 
+        } catch (ServerException $e){
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
+        } catch (\Exception $th) {
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
+        }
+    }
+
+    public function verifyDocument($file){
+        if($file instanceof UploadedFile || $file instanceof File) {
+            $filename = $file->hashName();
+            $datafile = file_get_contents($file);
+        } else {
+            throw new InvalidArgument('Unsupported argument type.');
+        }
+
+        try {
+            $response = $this->http->request('POST', "{$this->getBaseUrl()}/api/sign/verify", [
+                'timeout' => $this->timeout,
+                'auth' => $this->getAuth(),
+                'multipart' => [
+                    [
+                        'name'     => 'signed_file',
+                        'contents' => $datafile,
+                        'filename' => $filename
+                    ]
+                ]
+                ]);
+            
+                return (new EsignBsreResponse())->setFromResponse($response); 
+        } catch (ServerException $e){
+            return (new EsignBsreResponse())->setFromExeption($e, $e->getCode());
+        } catch (\Exception $th) {
+            return (new EsignBsreResponse())->setFromExeption($th, $th->getCode());
+        }
+    }
 }
