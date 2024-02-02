@@ -6,6 +6,7 @@ class EsignBsreResponse
     private $status;
     private $errors;
     private $data;
+    private $id_dokumen;
     private $response;
     const STATUS_OK = 200;
     const STATUS_TIMEOUT = 408;
@@ -29,6 +30,7 @@ class EsignBsreResponse
         $this->setStatusFromResponse();
         $this->setDataFromResponse();
         $this->setErrorsFromResponse();
+        $this->setIdDokumenFromResponse();
 
         return $this;
     }
@@ -80,11 +82,31 @@ class EsignBsreResponse
     }
 
     /**
+     * @param mixed $id_dokumen
+     */
+    public function setIdDokumenFromResponse()
+    {
+        if ($this->isSuccess()){
+            if (!empty($this->response->getHeader('id_dokumen')[0]))
+                $this->id_dokumen = $this->response->getHeader('id_dokumen')[0];
+            else
+                $this->id_dokumen = null;
+        }else{
+            $this->id_dokumen = null;
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function getData()
     {
         return $this->data;
+    }
+
+    public function getIdDokumen()
+    {
+        return $this->id_dokumen;
     }
 
     public function isSuccess(){
