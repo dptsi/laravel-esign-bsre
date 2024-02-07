@@ -123,7 +123,7 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'image',
-                        'contents' => true
+                        'contents' => 'true'
                     ],
                     [
                         'name'     => 'imageTTD',
@@ -193,7 +193,7 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'image',
-                        'contents' => false
+                        'contents' => 'false'
                     ],
                     [
                         'name'     => 'linkQR',
@@ -269,7 +269,7 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'image',
-                        'contents' => true
+                        'contents' => 'true'
                     ],
                     [
                         'name'     => 'imageTTD',
@@ -331,7 +331,7 @@ class EsignBsreManager
                     ],
                     [
                         'name'     => 'image',
-                        'contents' => false
+                        'contents' => 'false'
                     ],
                     [
                         'name'     => 'linkQR',
